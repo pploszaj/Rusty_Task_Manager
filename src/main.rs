@@ -94,9 +94,27 @@ fn main() {
                 }
                 
             }
-        }
-        
-         else if user_input == "Exit" {
+        } else if user_input == "Delete" {
+            loop {
+                let task_id = read_input("\nType in the ID of the task you'd like to delete\n");
+                match task_id.parse::<usize>() {
+                    Ok(id) => {
+                        if id < tasks.len() {
+                            tasks.remove(id);
+                            break;
+                        } else {
+                            println!("The ID you entered doesn't exist. Please enter a valid task ID.");
+                            continue;
+                        }
+                    },
+                    Err(_) => {
+                        println!("Invalid input. Please enter a number.");
+                    }
+                }
+            }
+            view_tasks(&tasks);
+            println!("Successfully deleted task");
+        } else if user_input == "Exit" {
             return;
         }
     }
