@@ -16,6 +16,15 @@ fn add_task(tasks: &mut Vec<Task>, task_input: String, description_input: String
     });
 }
 
+fn view_tasks(tasks: &Vec<Task>) {
+    for task in tasks {
+        println!("Task ID: {} \nTask name: {}", task.id, task.title);
+        match &task.description {
+            Some(desc) => println!("Description: {}", desc),
+            None => println!("Description: None")
+        }
+    }
+}
 
 fn main() {
     //a vector that holds all the tasks
@@ -34,28 +43,39 @@ fn main() {
     add_task(&mut tasks, task_input, description_input);
     
 
-    println!("\nGreat! Looks like you've successfully added your first task. Let's get you familiarized with the menu. Type 'View' if you'd like to see all your tasks. Type 'Add' if you'd like to add a new task. Type 'update' to update or delete an exisiting task. Type 'Exit' to exit the program.\n");
+    println!("\nGreat! Looks like you've successfully added your first task. Let's get you familiarized with the menu. Type 'View' if you'd like to see all your tasks. Type 'Add' if you'd like to add a new task. Type 'Update' to update or delete an exisiting task. Type 'Exit' to exit the program.\n");
 
     loop {
         let user_input = read_input("\nWhat would you like to do next?\n");
         if user_input == "View" {
-            for task in &tasks {
-                println!("Task ID: {} \nTask name: {}", task.id, task.title);
-                match &task.description {
-                    Some(desc) => println!("Description: {}", desc),
-                    None => println!("Description: None")
-                }
-            }
+            view_tasks(&tasks);
         } else if user_input == "Add" {
             let task_name = read_input("\nEnter name of task:\n");
             let desc_input = read_input("\nEnter description or N\n");
             add_task(&mut tasks, task_name, desc_input);
 
-        } else if user_input == "Exit" {
+        } else if user_input == "Update" {
+            view_tasks(&tasks);
+            let task_id: usize = read_input("\nType in the ID of the task you'd like to update\n").parse().unwrap();
+            let updated_field = read_input("What would you like to update? Type T for title or D for description. B for both.");
+            if updated_field == "T" {
+                let updated_task_name = read_input("\nEnter new name of task:\n");
+                tasks[task_id].title = updated_task_name;
+            } else if updated_field == "D" {
+                let updated_desc_input = read_input("\nEnter new description.\n");
+                tasks[task_id].description = Some(updated_desc_input);
+            } else if updated_field == "B" {
+                let updated_task_name = read_input("\nEnter new name of task:\n");
+                let updated_desc_input = read_input("\nEnter new description.\n");
+                tasks[task_id].title = updated_task_name;
+                tasks[task_id].description = Some(updated_desc_input);
+            }
+            
+        }
+        
+         else if user_input == "Exit" {
             return;
         }
     }
 
-
-    
 }
