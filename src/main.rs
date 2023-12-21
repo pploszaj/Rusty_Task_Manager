@@ -55,22 +55,45 @@ fn main() {
             add_task(&mut tasks, task_name, desc_input);
 
         } else if user_input == "Update" {
-            view_tasks(&tasks);
-            let task_id: usize = read_input("\nType in the ID of the task you'd like to update\n").parse().unwrap();
-            let updated_field = read_input("What would you like to update? Type T for title or D for description. B for both.");
-            if updated_field == "T" {
-                let updated_task_name = read_input("\nEnter new name of task:\n");
-                tasks[task_id].title = updated_task_name;
-            } else if updated_field == "D" {
-                let updated_desc_input = read_input("\nEnter new description.\n");
-                tasks[task_id].description = Some(updated_desc_input);
-            } else if updated_field == "B" {
-                let updated_task_name = read_input("\nEnter new name of task:\n");
-                let updated_desc_input = read_input("\nEnter new description.\n");
-                tasks[task_id].title = updated_task_name;
-                tasks[task_id].description = Some(updated_desc_input);
+            loop {
+                view_tasks(&tasks);
+                let task_id = read_input("\nType in the ID of the task you'd like to update\n");
+                match task_id.parse::<usize>() {
+                    Ok(id) => {
+                        if id < tasks.len() {
+                            loop {
+                                let updated_field = read_input("What would you like to update? Type T for title or D for description. B for both.");
+                                if updated_field == "T" {
+                                    let updated_task_name = read_input("\nEnter new name of task:\n");
+                                    tasks[id].title = updated_task_name;
+                                    break;
+                                } else if updated_field == "D" {
+                                    let updated_desc_input = read_input("\nEnter new description.\n");
+                                    tasks[id].description = Some(updated_desc_input);
+                                    break;
+                                } else if updated_field == "B" {
+                                    let updated_task_name = read_input("\nEnter new name of task:\n");
+                                    let updated_desc_input = read_input("\nEnter new description.\n");
+                                    tasks[id].title = updated_task_name;
+                                    tasks[id].description = Some(updated_desc_input);
+                                    break;
+                                } else {
+                                    println!("Incorrect input! Type T for title or D for description. B for both.");
+                                    continue;
+                                    }
+                                }
+                            println!("Update successful!");
+                        } else {
+                            println!("Task ID is out of range. Please enter a valid ID");
+                            continue;
+                        }
+                    },
+                    Err(_) => {
+                        println!("Invalid input. Please enter a number.");
+                    }
+                }
+                
             }
-            
         }
         
          else if user_input == "Exit" {
